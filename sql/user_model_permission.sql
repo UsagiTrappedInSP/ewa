@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS `user_model_permission` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '权限ID',
+    `user_id` BIGINT UNSIGNED NOT NULL COMMENT '用户ID',
+    `model_id` BIGINT UNSIGNED NOT NULL COMMENT '模型ID',
+    `permission_level` TINYINT NOT NULL DEFAULT 1 COMMENT '权限级别：1-查看，2-编辑，3-管理，4-超级权限',
+    `is_owner` TINYINT NOT NULL DEFAULT 0 COMMENT '是否所有者：0-否，1-是',
+    `expire_time` DATETIME DEFAULT NULL COMMENT '权限过期时间',
+    `granted_by` BIGINT UNSIGNED NOT NULL COMMENT '授权人ID',
+    `grant_reason` VARCHAR(255) DEFAULT NULL COMMENT '授权原因',
+    `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态：1-有效，0-无效',
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_user_model` (`user_id`, `model_id`),
+    KEY `idx_model_id` (`model_id`),
+    KEY `idx_permission_level` (`permission_level`),
+    KEY `idx_status` (`status`),
+    CONSTRAINT `fk_ump_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `fk_ump_model_id` FOREIGN KEY (`model_id`) REFERENCES `model` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `fk_ump_granted_by` FOREIGN KEY (`granted_by`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户模型权限关联表'; 

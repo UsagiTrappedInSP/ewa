@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS `model` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '模型ID',
+    `name` VARCHAR(100) NOT NULL COMMENT '模型名称',
+    `version` VARCHAR(50) NOT NULL COMMENT '模型版本号',
+    `file_url` VARCHAR(255) NOT NULL COMMENT '模型文件URL',
+    `file_size` BIGINT UNSIGNED NOT NULL COMMENT '文件大小(字节)',
+    `file_type` VARCHAR(20) NOT NULL COMMENT '文件类型',
+    `description` TEXT DEFAULT NULL COMMENT '模型描述',
+    `category` VARCHAR(50) NOT NULL COMMENT '模型分类',
+    `tags` VARCHAR(255) DEFAULT NULL COMMENT '标签，多个标签用逗号分隔',
+    `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态：1-正常，0-禁用',
+    `download_count` INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '下载次数',
+    `created_by` BIGINT UNSIGNED NOT NULL COMMENT '创建者ID',
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    KEY `idx_category` (`category`),
+    KEY `idx_created_by` (`created_by`),
+    KEY `idx_status` (`status`),
+    CONSTRAINT `fk_model_created_by` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='模型库表'; 
